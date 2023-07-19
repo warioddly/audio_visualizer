@@ -14,7 +14,7 @@ const stylesHandler = MiniCssExtractPlugin.loader;
 const config = {
     entry: './src/index.ts',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
     },
     devServer: {
