@@ -1,20 +1,34 @@
 
+// @ts-ignore
+import waves from './assets/audio/waves.mp3'
 
-
-const FFT_SIZE: number = 2048;
 
 export class AudioController {
+
     public readonly audioElement: HTMLAudioElement;
     public readonly analyser: AnalyserNode;
-
+    public readonly dataArray: Uint8Array;
     private readonly bufferLength: number;
-    private readonly dataArray: Uint8Array;
 
-    constructor(path: string) {
+    private _options: any = {
+        fftSize: 2048,
+        smoothingTimeConstant: 0.8,
+        minDecibels: -90,
+        maxDecibels: -10,
+    }
+
+    constructor(path: string, options?: any) {
+        waves;
+
         const audioContext: AudioContext = new AudioContext();
-
         this.analyser = audioContext.createAnalyser();
-        this.analyser.fftSize = FFT_SIZE;
+
+
+        this.analyser.fftSize = options.fftSize || this._options.fftSize;
+        this.analyser.smoothingTimeConstant = options.smoothingTimeConstant || this._options.smoothingTimeConstant;
+        this.analyser.minDecibels = options.minDecibels || this._options.minDecibels;
+        this.analyser.maxDecibels = options.maxDecibels || this._options.maxDecibels;
+
 
         this.audioElement = new Audio(path);
         const source: MediaElementAudioSourceNode = audioContext.createMediaElementSource(this.audioElement);
@@ -28,7 +42,6 @@ export class AudioController {
         window.addEventListener('click', () => {
             if (this.audioElement.paused) {
                 this.audioElement.play();
-
                 console.log("Playing");
             } else {
                 this.audioElement.pause();
@@ -36,23 +49,12 @@ export class AudioController {
             }
         });
 
-
-        this.audioElement.addEventListener('play', () => {
-            this._getAudioData();
-        });
-
     }
 
-    private _getAudioData = () => {
+    public getByteFrequencyData(): Uint8Array {
         this.analyser.getByteFrequencyData(this.dataArray);
+        return this.dataArray;
+    }
 
-        for (let i = 0; i < this.bufferLength; i++) {
-            if (this.dataArray[i] !== 0) console.log(`Frequency bin ${i}: ${this.dataArray[i]}`);
-        }
 
-        setTimeout(() => {
-            this._getAudioData();
-        }, 1000 / (this.analyser.context.sampleRate / this.analyser.fftSize));
-
-    };
 }
