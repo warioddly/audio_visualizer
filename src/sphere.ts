@@ -5,13 +5,13 @@ import * as THREE from 'three';
 
 export class Sphere {
 
-    public readonly geometry: THREE.BufferGeometry;
-    public readonly buffer: THREE.BufferGeometry;
+    public readonly geometry: THREE.SpherBufferGeometry;
     public readonly mesh: THREE.Mesh;
-    
 
+    public readonly _originalPositions: any;
+    
     private _options: any = {
-        radius: 5,
+        radius: 3,
         widthSegments: 32,
         heightSegments: 32,
         color: 0x00ff00,
@@ -22,14 +22,25 @@ export class Sphere {
 
     constructor (options?: any) {
 
-        // this._options = { ...this._options, ...options };
+        const { radius, widthSegments, heightSegments }: any = { ...this._options, ...options };
 
-        this.geometry = new THREE.SphereGeometry( 3, 50, 50);
+        this.geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments);
 
         this.mesh = new THREE.Mesh( this.geometry, new THREE.MeshBasicMaterial( { wireframe: true } ) );
 
-        // this.buffer = new THREE.BufferGeometry().setFromObject(this.mesh);
+        this._originalPositions = [ ...this.mesh.geometry.attributes.position.array ];
 
+    }
+
+
+    public setToOriginalGeometry() {
+        this.mesh.geometry.attributes.position.copyArray(this._originalPositions);
+        this.needsUpdate();
+    }
+
+
+    public needsUpdate() {
+        this.mesh.geometry.attributes.position.needsUpdate = true;
     }
 
 

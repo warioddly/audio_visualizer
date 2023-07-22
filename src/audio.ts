@@ -15,7 +15,7 @@ export class AudioController {
         autoplay: false,
         enableKeyboardControls: true,
         windTimeConstant: 0.1,
-        fftSize: 32,
+        fftSize: 512,
     }
 
 

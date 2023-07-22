@@ -44,8 +44,8 @@ class Engine {
         this.orbitControls.enableDamping = true;
         this.orbitControls.dampingFactor = 0.05;
         this.orbitControls.screenSpacePanning = false;
-        this.orbitControls.maxDistance = 10;
-        this.orbitControls.minDistance = 4;
+        this.orbitControls.maxDistance = 8;
+        this.orbitControls.minDistance = 1;
 
         this._light = new THREE.DirectionalLight( 0xffffff, 0.5 );
         this._light.position.set( 0, 0, 1 );
@@ -77,7 +77,7 @@ class Engine {
 
     private _animation( time: any ) {
 
-       this._sphereAnimation();
+       this._sphereAnimation(time);
 
        this.orbitControls.update();
 
@@ -86,28 +86,80 @@ class Engine {
     }
 
 
-    private _sphereAnimation() {
+    private _sphereAnimation(time: any) {
 
         let dataArray = this._audioController.analyser.getFrequencyData();
 
         const bassArray = dataArray.slice(0, dataArray.length / 4);
         const average = bassArray.reduce((acc: number, value: number) => acc + value, 0) / bassArray.length;
 
+
         if (average < 100) {
-            this.sphere.mesh.scale.x = 1;
-            this.sphere.mesh.scale.y = 1;
-            this.sphere.mesh.scale.z = 1;
+            this.sphere.mesh.scale.x = 0.3;
+            this.sphere.mesh.scale.y = 0.3;
+            this.sphere.mesh.scale.z = 0.3;
+          
+            this.sphere.setToOriginalGeometry();
         }
         else {
-            this.sphere.mesh.scale.x = average / 300;
-            this.sphere.mesh.scale.y = average / 300;
-            this.sphere.mesh.scale.z = average / 300;
+            // this.sphere.mesh.scale.x = average / 300;
+            // this.sphere.mesh.scale.y = average / 300;
+            // this.sphere.mesh.scale.z = average / 300;
+
+            
+            this._applyAnimationToSphere(time, average);
+
+
+        
         }
 
         this.sphere.mesh.rotation.x += 0.01;
-        this.sphere.mesh.rotation.y += 0.01;
+        this.sphere.mesh.rotation.z += 0.01;
 
     }
+
+
+
+    private _applyAnimationToSphere(time: any, average: number) {
+
+        const positions = this.sphere.mesh.geometry.attributes.position.array;
+        const vertexCount = positions.length / 3;
+        const originalPositions = this.sphere._originalPositions;
+
+
+            // Reset positions to their original values
+        for (let i = 0; i < vertexCount; i++) {
+            positions[i * 3] = originalPositions[i * 3];
+            positions[i * 3 + 1] = originalPositions[i * 3 + 1];
+            positions[i * 3 + 2] = originalPositions[i * 3 + 2];
+        }
+
+        // Apply the animation with music response based on the average value
+        const dampingFactor = 0.5; // Adjust this value for more or less damping
+        const responseFactor = 0.1; // Adjust this value to control the response to music
+        for (let i = 0; i < vertexCount; i++) {
+            // Create random values for scaling
+            const randomScale = 1 + Math.random() * (average / 100); // Random scale based on the average value
+            const clampedRandomScale = Math.min(Math.max(randomScale, 1), 1.5); // Clamp the scale between 1 and 1.5
+
+            // Apply the scaling with music response to the vertex
+            const musicResponse = average / 100 * responseFactor; // Calculate the response to music
+            positions[i * 3] += (originalPositions[i * 3] * clampedRandomScale - positions[i * 3]) * dampingFactor * musicResponse;
+            positions[i * 3 + 1] += (originalPositions[i * 3 + 1] * clampedRandomScale - positions[i * 3 + 1]) * dampingFactor * musicResponse;
+            positions[i * 3 + 2] += (originalPositions[i * 3 + 2] * clampedRandomScale - positions[i * 3 + 2]) * dampingFactor * musicResponse;
+        }
+
+          
+          this.sphere.needsUpdate();
+  
+
+            
+
+
+
+    }
+
+
 
 
     private _resize() {

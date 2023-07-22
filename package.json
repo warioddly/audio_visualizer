@@ -26,6 +26,7 @@
     "serve": "webpack serve"
   },
   "dependencies": {
+    "simplex-noise": "^4.0.1",
     "three": "^0.154.0"
   }
 }
