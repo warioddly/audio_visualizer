@@ -15,7 +15,7 @@ export class AudioController {
         autoplay: false,
         enableKeyboardControls: true,
         windTimeConstant: 0.1,
-        fftSize: 512,
+        fftSize: 2048
     }
 
 
@@ -64,7 +64,6 @@ export class AudioController {
     private _addKeyboardControls(): void {
 
 
-        // sound controls
         window.addEventListener('keydown', (event) => {
 
             if (event.key === ' ') {
@@ -91,7 +90,6 @@ export class AudioController {
         });
 
 
-        // reset wind sound time constant
         window.addEventListener('keyup', (event) => {
             if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
                 this.sound.setPlaybackRate(1);

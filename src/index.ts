@@ -2,36 +2,30 @@
 // @ts-ignore
 import * as THREE from 'three';
 // @ts-ignore
-import { AudioController } from './audio';
-// @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-// @ts-ignore
-import waves from './assets/audio/waves.mp3';
-// @ts-ignore
-import space from './assets/images/space.jpg';
+import { AudioController } from './audio';
 import { Sphere } from './sphere';
+import Utils from './utils'
 
 
 class Engine {
 
-
     private readonly _scene: THREE.Scene;
     private readonly _camera: THREE.PerspectiveCamera;
-    private readonly orbitControls: OrbitControls;
+    private readonly _orbitControls: OrbitControls;
     private readonly _renderer: THREE.WebGLRenderer;
     private readonly _light: THREE.DirectionalLight;
     private readonly _audioController: AudioController;
 
-    private sphere: Sphere = new Sphere();
+    private readonly sphere: Sphere;
+    private readonly utils: Utils = new Utils();
+
 
     constructor() {
 
-        waves;
-        space;
-
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.01, 100 );
-        this._camera.position.z = 5;
+        this._camera.position.z = 15;
 
 
         this._renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -40,125 +34,49 @@ class Engine {
         this._renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( this._renderer.domElement );
 
-        this.orbitControls = new OrbitControls( this._camera, this._renderer.domElement );
-        this.orbitControls.enableDamping = true;
-        this.orbitControls.dampingFactor = 0.05;
-        this.orbitControls.screenSpacePanning = false;
-        this.orbitControls.maxDistance = 8;
-        this.orbitControls.minDistance = 1;
+
+        this._orbitControls = new OrbitControls( this._camera, this._renderer.domElement );
+        this._orbitControls.enableDamping = true;
+        this._orbitControls.dampingFactor = 0.05;
+        this._orbitControls.screenSpacePanning = false;
+        this._orbitControls.maxDistance = 18;
+        this._orbitControls.minDistance = 7;
+
 
         this._light = new THREE.DirectionalLight( 0xffffff, 0.5 );
         this._light.position.set( 0, 0, 1 );
         this._scene.add( this._light );
 
-    
-        // let bgTexture = new THREE.TextureLoader().load("./assets/images/space.jpg");
-        // this._scene.background = bgTexture;
+        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
+        this._scene.add(ambientLight);
 
+        this.sphere = new Sphere();
+        this._scene.add(this.sphere.mesh);
       
         this._audioController = new AudioController('./assets/audio/waves.mp3', {
             loop: true,
-            autoplay: true,
+            autoplay: false,
             enableKeyboardControls: true,
         });
 
 
-        // создать сферу через buffer geometry
-
-        this.sphere = new Sphere();
-
-        this._scene.add(this.sphere.mesh);
-
-
         window.addEventListener( 'resize', this._resize.bind(this) );
+
+
+        console.log("%cEngine is initialized", "color: white; font-weight: bold; background-color: green; padding: 2px; border-radius: 3px;");
 
     }
 
 
     private _animation( time: any ) {
 
-       this._sphereAnimation(time);
+       this.sphere.animate(new Uint8Array(this._audioController.analyser.getFrequencyData()), time);
 
-       this.orbitControls.update();
+       this._orbitControls.update();
 
        this._renderer.render( this._scene, this._camera );
 
     }
-
-
-    private _sphereAnimation(time: any) {
-
-        let dataArray = this._audioController.analyser.getFrequencyData();
-
-        const bassArray = dataArray.slice(0, dataArray.length / 4);
-        const average = bassArray.reduce((acc: number, value: number) => acc + value, 0) / bassArray.length;
-
-
-        if (average < 100) {
-            this.sphere.mesh.scale.x = 0.3;
-            this.sphere.mesh.scale.y = 0.3;
-            this.sphere.mesh.scale.z = 0.3;
-          
-            this.sphere.setToOriginalGeometry();
-        }
-        else {
-            // this.sphere.mesh.scale.x = average / 300;
-            // this.sphere.mesh.scale.y = average / 300;
-            // this.sphere.mesh.scale.z = average / 300;
-
-            
-            this._applyAnimationToSphere(time, average);
-
-
-        
-        }
-
-        this.sphere.mesh.rotation.x += 0.01;
-        this.sphere.mesh.rotation.z += 0.01;
-
-    }
-
-
-
-    private _applyAnimationToSphere(time: any, average: number) {
-
-        const positions = this.sphere.mesh.geometry.attributes.position.array;
-        const vertexCount = positions.length / 3;
-        const originalPositions = this.sphere._originalPositions;
-
-
-            // Reset positions to their original values
-        for (let i = 0; i < vertexCount; i++) {
-            positions[i * 3] = originalPositions[i * 3];
-            positions[i * 3 + 1] = originalPositions[i * 3 + 1];
-            positions[i * 3 + 2] = originalPositions[i * 3 + 2];
-        }
-
-        // Apply the animation with music response based on the average value
-        const dampingFactor = 0.5; // Adjust this value for more or less damping
-        const responseFactor = 0.1; // Adjust this value to control the response to music
-        for (let i = 0; i < vertexCount; i++) {
-            // Create random values for scaling
-            const randomScale = 1 + Math.random() * (average / 100); // Random scale based on the average value
-            const clampedRandomScale = Math.min(Math.max(randomScale, 1), 1.5); // Clamp the scale between 1 and 1.5
-
-            // Apply the scaling with music response to the vertex
-            const musicResponse = average / 100 * responseFactor; // Calculate the response to music
-            positions[i * 3] += (originalPositions[i * 3] * clampedRandomScale - positions[i * 3]) * dampingFactor * musicResponse;
-            positions[i * 3 + 1] += (originalPositions[i * 3 + 1] * clampedRandomScale - positions[i * 3 + 1]) * dampingFactor * musicResponse;
-            positions[i * 3 + 2] += (originalPositions[i * 3 + 2] * clampedRandomScale - positions[i * 3 + 2]) * dampingFactor * musicResponse;
-        }
-
-          
-          this.sphere.needsUpdate();
-  
-
-            
-
-
-
-    }
-
 
 
 
@@ -167,7 +85,6 @@ class Engine {
         this._camera.updateProjectionMatrix();
         this._renderer.setSize( window.innerWidth, window.innerHeight );
     }
-
 
 }
 

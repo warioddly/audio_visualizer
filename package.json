@@ -16,8 +16,8 @@
     "webpack-dev-server": "^4.15.1"
   },
   "version": "1.0.0",
-  "description": "My webpack project",
-  "name": "my-webpack-project",
+  "description": "Web audio visualizer based on the Three.js library. And the source code is written in TypeScript",
+  "name": "audio_visualizer",
   "scripts": {
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
