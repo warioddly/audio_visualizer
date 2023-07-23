@@ -55,7 +55,7 @@ class Engine {
       
         this._audioController = new AudioController('./assets/audio/waves.mp3', {
             loop: true,
-            autoplay: false,
+            autoplay: true,
             enableKeyboardControls: true,
         });
 
