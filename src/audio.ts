@@ -9,6 +9,8 @@ export class AudioController {
     public readonly listener: THREE.AudioListener;
     public readonly analyser: THREE.AudioAnalyser;
 
+    public initializated: boolean = false;
+
 
     private _options: any = {
         loop: false,
@@ -39,8 +41,11 @@ export class AudioController {
             if (that._options.autoplay) {
                 that.sound.play();
             }
+
+            that.initializated = true;
             
         });
+
 
         if (this._options.enableKeyboardControls) {
             this._addKeyboardControls();

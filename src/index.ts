@@ -4,8 +4,11 @@ import * as THREE from 'three';
 // @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { AudioController } from './audio';
+// @ts-ignore
+import waves from './assets/audio/waves.mp3';
 import { Sphere } from './sphere';
 import Utils from './utils'
+import GUI from './gui';
 
 
 class Engine {
@@ -15,13 +18,18 @@ class Engine {
     private readonly _orbitControls: OrbitControls;
     private readonly _renderer: THREE.WebGLRenderer;
     private readonly _light: THREE.DirectionalLight;
-    private readonly _audioController: AudioController;
+    private _audioController: AudioController;
 
     private readonly sphere: Sphere;
     private readonly utils: Utils = new Utils();
+    private readonly GUI: GUI;
+
+    private initializated: boolean = false;
 
 
     constructor() {
+
+        waves;
 
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.01, 100 );
@@ -52,13 +60,20 @@ class Engine {
 
         this.sphere = new Sphere();
         this._scene.add(this.sphere.mesh);
-      
-        this._audioController = new AudioController('./assets/audio/waves.mp3', {
-            loop: true,
-            autoplay: true,
-            enableKeyboardControls: true,
-        });
 
+
+        this.GUI = new GUI((url: string) => {
+            
+            this._audioController = new AudioController(url, {
+                loop: true,
+                autoplay: true,
+                enableKeyboardControls: true,
+            });
+
+            this.initializated = true;
+        });
+      
+       
 
         window.addEventListener( 'resize', this._resize.bind(this) );
 
@@ -70,7 +85,10 @@ class Engine {
 
     private _animation( time: any ) {
 
-       this.sphere.animate(new Uint8Array(this._audioController.analyser.getFrequencyData()), time);
+        if (this.initializated) {
+
+            this.sphere.animate(new Uint8Array(this._audioController.analyser.getFrequencyData()), time);
+        }
 
        this._orbitControls.update();
 

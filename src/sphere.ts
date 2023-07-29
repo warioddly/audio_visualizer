@@ -10,10 +10,8 @@ export class Sphere {
     public readonly geometry: THREE.SpherBufferGeometry;
     public readonly mesh: THREE.Mesh;
 
-
     private _noise3D: Noise3D = new Noise3D();
     private _utils: any = new Utils();
-    
 
     private _options: any = {
         radius: 3,

@@ -12,9 +12,134 @@
                 margin: 0;
                 padding: 0;
             }
+
+            #audio-uploader, #audio-playback {
+                position: absolute;
+                bottom: 20px;
+                left: 0;
+                right: 0;
+                max-width: 400px;
+                margin: auto;
+                background-color: #000;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-color: aliceblue;
+            }
+
+            #audio-playback {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 10px;
+                height: 10px;
+                padding: 20px;
+                background-color: white;
+                cursor: pointer;
+            }
+
+            #audio-uploader::-webkit-file-upload-button {
+                visibility: hidden;
+            }
+
+
+            #play-or-pause {
+                position: absolute;
+                bottom: 20px;
+                left: 0;
+                right: 0;
+                max-width: 400px;
+                margin: auto;
+                width: 10px;
+                height: 10px;
+                padding: 20px;
+                background-color: white;
+                cursor: pointer;
+            }
+
+
+            #play-or-pause button {
+                width: 100%;
+                height: 100%;
+                background-color: #000;
+                border: none;
+                outline: none;
+                cursor: pointer;
+            }
+
+
+            #play-or-pause button::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-left: 15px solid #fff;
+            }
+
+
+            #play-or-pause button.playing::before {
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 15px solid #fff;
+            }
+
+
+            #play-or-pause button.playing::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-left: 15px solid #fff;
+            }
+
+
+            #play-or-pause button.playing::after {
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 15px solid #fff;
+            }
+
+
+            #play-or-pause button.playing::after {
+                display: none;
+            }
+
+
+            #play-or-pause button.playing::before {
+                display: none;
+            }
+
+
+            #play-or-pause button.playing {
+                background-color: #fff;
+            }
+
+
+            #play-or-pause button.playing::before {
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 15px solid #000;
+            }
+
+
+
+
+
         </style>
     </head>
     <body>
 
+        <audio src="" id="audio-playback"></audio>
+        <!-- <input type="file" id="audio-uploader" accept="audio/*" /> -->
+        
     </body>
 </html>
