@@ -21,7 +21,7 @@ export class AudioController {
     }
 
 
-    constructor(path: string, options?: any) {
+    constructor(options?: any) {
         
         this._options = { ...this._options, ...options };
 
@@ -32,19 +32,19 @@ export class AudioController {
 
         const that = this;
 
-        new THREE.AudioLoader().load(path, function( buffer: any) {
+        // new THREE.AudioLoader().load(path, function( buffer: any) {
 
-            that.sound.setBuffer( buffer );
-            that.sound.setLoop( that._options.loop );
-            that.sound.setVolume( 1 );
+        //     that.sound.setBuffer( buffer );
+        //     that.sound.setLoop( that._options.loop );
+        //     that.sound.setVolume( 1 );
 
-            if (that._options.autoplay) {
-                that.sound.play();
-            }
+        //     if (that._options.autoplay) {
+        //         that.sound.play();
+        //     }
 
-            that.initializated = true;
+        //     that.initializated = true;
             
-        });
+        // });
 
 
         if (this._options.enableKeyboardControls) {

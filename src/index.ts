@@ -22,7 +22,7 @@ class Engine {
 
     private readonly sphere: Sphere;
     private readonly utils: Utils = new Utils();
-    private readonly GUI: GUI;
+    private readonly GUI: GUI = new GUI();;
 
     private initializated: boolean = false;
 
@@ -62,16 +62,14 @@ class Engine {
         this._scene.add(this.sphere.mesh);
 
 
-        this.GUI = new GUI((url: string) => {
-            
-            this._audioController = new AudioController(url, {
-                loop: true,
-                autoplay: true,
-                enableKeyboardControls: true,
-            });
-
-            this.initializated = true;
+           
+        this._audioController = new AudioController({
+            loop: true,
+            autoplay: true,
+            enableKeyboardControls: true,
         });
+
+        this.initializated = true;
       
        
 
@@ -86,7 +84,6 @@ class Engine {
     private _animation( time: any ) {
 
         if (this.initializated) {
-
             this.sphere.animate(new Uint8Array(this._audioController.analyser.getFrequencyData()), time);
         }
 

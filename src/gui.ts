@@ -5,8 +5,10 @@ export default class GUI {
 
     public playback: any = document.querySelector('#audio-playback');
     public uploader: HTMLBodyElement = document.querySelector('#audio-uploader');
+    public preloader: HTMLBodyElement = document.querySelector('#preloader');
+    
 
-    constructor(callback: any) {
+    constructor() {
 
         const reader = new FileReader();
         
@@ -14,11 +16,10 @@ export default class GUI {
 
             reader.readAsDataURL(event.target.files[0]);
 
-            callback(URL.createObjectURL(event.target.files[0]));
+            reader.onload = () => this.playback.src = reader.result;
 
         });
 
     }
-
 
 }

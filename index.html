@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html5>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -8,16 +8,13 @@
         <meta name="keywords" content="WebGL, Three.js, TypeScript, Audio Visualizer, Web Audio API">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
+
             * {
                 margin: 0;
                 padding: 0;
             }
 
-            #audio-uploader, #audio-playback {
-                position: absolute;
-                bottom: 20px;
-                left: 0;
-                right: 0;
+            #audio-uploader {
                 max-width: 400px;
                 margin: auto;
                 background-color: #000;
@@ -27,119 +24,76 @@
                 background-color: aliceblue;
             }
 
-            #audio-playback {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 10px;
-                height: 10px;
-                padding: 20px;
-                background-color: white;
-                cursor: pointer;
-            }
-
             #audio-uploader::-webkit-file-upload-button {
                 visibility: hidden;
             }
 
 
-            #play-or-pause {
-                position: absolute;
-                bottom: 20px;
-                left: 0;
-                right: 0;
+            #audio-playback {
                 max-width: 400px;
                 margin: auto;
-                width: 10px;
-                height: 10px;
-                padding: 20px;
-                background-color: white;
-                cursor: pointer;
-            }
-
-
-            #play-or-pause button {
-                width: 100%;
-                height: 100%;
                 background-color: #000;
-                border: none;
-                outline: none;
-                cursor: pointer;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-color: transparent;
             }
 
 
-            #play-or-pause button::before {
+            #loading {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 150px;
+                background-color: #000;
+                z-index: 9999;
+            }
+
+
+            #loading::after {
                 content: "";
                 position: absolute;
                 top: 50%;
                 left: 50%;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 3px solid #fff;
+                border-top-color: #000;
+                animation: spin 0.8s infinite linear;
                 transform: translate(-50%, -50%);
-                width: 0;
-                height: 0;
-                border-top: 10px solid transparent;
-                border-bottom: 10px solid transparent;
-                border-left: 15px solid #fff;
             }
 
 
-            #play-or-pause button.playing::before {
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-top: 15px solid #fff;
+            @keyframes spin {
+                from { transform: translate(-50%, -50%) rotate(0deg); }
+                to { transform: translate(-50%, -50%) rotate(360deg); }
             }
 
-
-            #play-or-pause button.playing::after {
-                content: "";
+            .audio {
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 0;
-                height: 0;
-                border-top: 10px solid transparent;
-                border-bottom: 10px solid transparent;
-                border-left: 15px solid #fff;
+                left: 0;
+                right: 0;
+                bottom: 20px;
             }
-
-
-            #play-or-pause button.playing::after {
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-top: 15px solid #fff;
-            }
-
-
-            #play-or-pause button.playing::after {
-                display: none;
-            }
-
-
-            #play-or-pause button.playing::before {
-                display: none;
-            }
-
-
-            #play-or-pause button.playing {
-                background-color: #fff;
-            }
-
-
-            #play-or-pause button.playing::before {
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-top: 15px solid #000;
-            }
-
-
-
 
 
         </style>
     </head>
     <body>
 
-        <audio src="" id="audio-playback"></audio>
-        <!-- <input type="file" id="audio-uploader" accept="audio/*" /> -->
-        
+        <div class="audio">
+            <audio controls id="audio-playback">
+                <source src="" type="audio/*"></source>
+                Your browser does not support the audio element.
+            </audio>
+            <input type="file" id="audio-uploader" accept="audio/*" />
+        </div>
+
+        <div id="loading"></div>
+
     </body>
 </html>
