@@ -24,6 +24,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Show files in the current directory
+        run: ls
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
