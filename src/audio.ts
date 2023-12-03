@@ -1,18 +1,17 @@
-
 // @ts-ignore
 import * as THREE from 'three';
 
 
 export class AudioController {
 
-    public readonly sound: THREE.Audio;
-    public readonly listener: THREE.AudioListener;
-    public readonly analyser: THREE.AudioAnalyser;
+    public sound: THREE.Audio;
+    public listener: THREE.AudioListener;
+    public analyser: THREE.AudioAnalyser;
 
-    public initializated: boolean = false;
+    public initialized: boolean = false;
 
 
-    private _options: any = {
+    private readonly _options: any = {
         loop: false,
         autoplay: false,
         enableKeyboardControls: true,
@@ -22,7 +21,8 @@ export class AudioController {
 
 
     constructor(options?: any) {
-        
+
+        const that = this;
         this._options = { ...this._options, ...options };
 
         this.listener = new THREE.AudioListener();
@@ -30,77 +30,93 @@ export class AudioController {
 
         this.analyser = new THREE.AudioAnalyser( this.sound, this._options.fftSize ); 
 
-        const that = this;
+        new THREE.AudioLoader().load(this._options.audio, function( buffer: any) {
 
-        // new THREE.AudioLoader().load(path, function( buffer: any) {
+            that.sound.setBuffer( buffer );
+            that.sound.setLoop( that._options.loop );
+            that.sound.setVolume( 1 );
 
-        //     that.sound.setBuffer( buffer );
-        //     that.sound.setLoop( that._options.loop );
-        //     that.sound.setVolume( 1 );
+            if (that._options.autoplay) {
+                that.sound.play();
+            }
 
-        //     if (that._options.autoplay) {
-        //         that.sound.play();
-        //     }
+            that.initialized = true;
 
-        //     that.initializated = true;
-            
-        // });
-
+        });
 
         if (this._options.enableKeyboardControls) {
-            this._addKeyboardControls();
+            window.addEventListener('keydown', this._onKeyDown.bind(this));
+            window.addEventListener('keyup', this._onKeyUp.bind(this));
         }
 
     }
 
 
-    public playOrPause(): void {
-        if (this.sound.isPlaying) {
-            this.sound.pause();
-            console.log('pause');
+    private _onKeyDown(event: KeyboardEvent): void {
+
+        if (!this.sound) return;
+
+        if (event.key === ' ') {
+            if (this.sound.isPlaying) {
+                this.sound.pause();
+            }
+            else {
+                this.sound.play();
+            }
         }
-        else {
-            this.sound.play();
-            console.log('play');
+
+        if (event.key === 'ArrowRight') {
+            this.sound.setPlaybackRate(this.sound.playbackRate + this._options.windTimeConstant);
         }
+
+        if (event.key === 'ArrowLeft') {
+            this.sound.setPlaybackRate(this.sound.playbackRate - this._options.windTimeConstant);
+        }
+
+        if (event.key === 'ArrowUp' && this.sound.getVolume() < 0.9) {
+            this.sound.setVolume(this.sound.getVolume() + 0.1);
+        }
+
+        if (event.key === 'ArrowDown' && this.sound.getVolume() > 0.1) {
+            this.sound.setVolume(this.sound.getVolume() - 0.1);
+        }
+
     }
 
 
-    private _addKeyboardControls(): void {
+    private _onKeyUp(event: KeyboardEvent): void {
+
+        if (!this.sound) return;
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+            this.sound.setPlaybackRate(1);
+        }
+    };
 
 
-        window.addEventListener('keydown', (event) => {
+    public dispose() {
 
-            if (event.key === ' ') {
-                this.playOrPause();
-            }
+        if (this.sound) {
+            this.sound.stop();
+            this.sound.disconnect();
+            this.sound.buffer = null;
+            this.sound = null;
+        }
 
-            if (event.key === 'ArrowRight') {
-                this.sound.setPlaybackRate(this.sound.playbackRate + this._options.windTimeConstant);
-            }
+        if (this.listener) {
+            this.listener = null;
+        }
 
-            if (event.key === 'ArrowLeft') {
-                this.sound.setPlaybackRate(this.sound.playbackRate - this._options.windTimeConstant);
-            }
+        if (this.analyser) {
+            this.analyser.analyser.disconnect();
+            this.analyser.analyser = null;
+            this.analyser = null;
+        }
 
-            if (event.key === 'ArrowUp' && this.sound.getVolume() < 0.9) {
-                this.sound.setVolume(this.sound.getVolume() + 0.1);
-            }
-
-            if (event.key === 'ArrowDown' && this.sound.getVolume() > 0.1) {
-                this.sound.setVolume(this.sound.getVolume() - 0.1);
-            }
-
-
-        });
-
-
-        window.addEventListener('keyup', (event) => {
-            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-                this.sound.setPlaybackRate(1);
-            }
-        });
-        
+        if (this._options.enableKeyboardControls) {
+            window.removeEventListener('keydown', this._onKeyDown);
+            window.removeEventListener('keyup', this._onKeyUp);
+        }
 
     }
 

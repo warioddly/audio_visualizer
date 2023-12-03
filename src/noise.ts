@@ -37,7 +37,7 @@ export default class Noise3D {
         const v = fade(y);
         const w = fade(z);
     
-        const hash = (X + 0) + (Y + 0) * 256 + (Z + 0) * 256 * 256;
+        const hash = (X) + (Y) * 256 + (Z) * 256 * 256;
         const g000 = grad(hash, x, y, z);
         const g001 = grad(hash + 1, x - 1, y, z);
         const g010 = grad(hash + 256, x, y - 1, z);
@@ -47,13 +47,13 @@ export default class Noise3D {
         const g110 = grad(hash + 256 * 256 + 256, x, y - 1, z - 1);
         const g111 = grad(hash + 256 * 256 + 257, x - 1, y - 1, z - 1);
     
-        const n000 = g000 * (x - 0) + g000 * (y - 0) + g000 * (z - 0);
-        const n001 = g001 * (x - 1) + g001 * (y - 0) + g001 * (z - 0);
-        const n010 = g010 * (x - 0) + g010 * (y - 1) + g010 * (z - 0);
-        const n011 = g011 * (x - 1) + g011 * (y - 1) + g011 * (z - 0);
-        const n100 = g100 * (x - 0) + g100 * (y - 0) + g100 * (z - 1);
-        const n101 = g101 * (x - 1) + g101 * (y - 0) + g101 * (z - 1);
-        const n110 = g110 * (x - 0) + g110 * (y - 1) + g110 * (z - 1);
+        const n000 = g000 * (x) + g000 * (y) + g000 * (z);
+        const n001 = g001 * (x - 1) + g001 * (y) + g001 * (z);
+        const n010 = g010 * (x) + g010 * (y - 1) + g010 * (z);
+        const n011 = g011 * (x - 1) + g011 * (y - 1) + g011 * (z);
+        const n100 = g100 * (x) + g100 * (y) + g100 * (z - 1);
+        const n101 = g101 * (x - 1) + g101 * (y) + g101 * (z - 1);
+        const n110 = g110 * (x) + g110 * (y - 1) + g110 * (z - 1);
         const n111 = g111 * (x - 1) + g111 * (y - 1) + g111 * (z - 1);
     
         return lerp(w, lerp(v, lerp(u, n000, n001), lerp(u, n010, n011)), lerp(v, lerp(u, n100, n101), lerp(u, n110, n111)));

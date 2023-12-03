@@ -5,10 +5,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { AudioController } from './audio';
 // @ts-ignore
-import waves from './assets/audio/waves.mp3';
+import waves from './audio/waves.mp3';
 import { Sphere } from './sphere';
-import Utils from './utils'
-import GUI from './gui';
 
 
 class Engine {
@@ -19,17 +17,14 @@ class Engine {
     private readonly _renderer: THREE.WebGLRenderer;
     private readonly _light: THREE.DirectionalLight;
     private _audioController: AudioController;
-
     private readonly sphere: Sphere;
-    private readonly utils: Utils = new Utils();
-    private readonly GUI: GUI = new GUI();;
 
-    private initializated: boolean = false;
+    private readonly initialized: boolean = false;
+
+    public uploader: HTMLBodyElement = document.querySelector('#audio-uploader');
 
 
     constructor() {
-
-        waves;
 
         this._scene = new THREE.Scene();
         this._camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.01, 100 );
@@ -61,30 +56,54 @@ class Engine {
         this.sphere = new Sphere();
         this._scene.add(this.sphere.mesh);
 
+        this._audioUploadListener();
 
-           
-        this._audioController = new AudioController({
-            loop: true,
-            autoplay: true,
-            enableKeyboardControls: true,
-        });
-
-        this.initializated = true;
-      
-       
+        this.initialized = true;
 
         window.addEventListener( 'resize', this._resize.bind(this) );
-
 
         console.log("%cEngine is initialized", "color: white; font-weight: bold; background-color: green; padding: 2px; border-radius: 3px;");
 
     }
 
 
+    private _audioUploadListener() {
+
+        this.uploader.addEventListener('change', (event: any) => {
+
+            const reader = new FileReader();
+
+            reader.readAsDataURL(event.target.files[0]);
+
+            reader.onload = () => {
+
+                if (!this.initialized) return;
+
+                if (this._audioController && this._audioController.initialized) {
+                    this._audioController.dispose();
+                }
+
+                this._audioController = new AudioController({
+                    audio: reader.result,
+                    loop: true,
+                    autoplay: true,
+                    enableKeyboardControls: true,
+                });
+
+            }
+
+        });
+
+    }
+
+
     private _animation( time: any ) {
 
-        if (this.initializated) {
-            this.sphere.animate(new Uint8Array(this._audioController.analyser.getFrequencyData()), time);
+        if (this._audioController && this._audioController.initialized) {
+            this.sphere.animate(
+                new Uint8Array(this._audioController.analyser.getFrequencyData()),
+                time
+            );
         }
 
        this._orbitControls.update();
@@ -94,12 +113,12 @@ class Engine {
     }
 
 
-
     private _resize() {
         this._camera.aspect = window.innerWidth / window.innerHeight;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize( window.innerWidth, window.innerHeight );
     }
+
 
 }
 

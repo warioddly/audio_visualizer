@@ -13,7 +13,7 @@ export class Sphere {
     private _noise3D: Noise3D = new Noise3D();
     private _utils: any = new Utils();
 
-    private _options: any = {
+    private readonly _options: any = {
         radius: 3,
         detail: 10,
         color: 0x00ff00,
@@ -56,6 +56,12 @@ export class Sphere {
             this._utils.modulate(Math.pow(lowerMaxFr, 0.8), 0, 1, 0, 8), 
             this._utils.modulate(upperAvgFr, 0, 1, 0, 4),
             time,
+        );
+
+        this.mesh.material.color.setHSL(
+            0.1 + (0.8 * (lowerMaxFr + upperAvgFr)),
+            0.5,
+            0.5,
         );
 
 

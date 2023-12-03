@@ -21,6 +21,7 @@ export default class Utils {
         return (total / arr.length);
     }
     
+    
     public max(arr: Uint8Array) {
         return arr.reduce((a, b) => Math.max(a, b))
     }
