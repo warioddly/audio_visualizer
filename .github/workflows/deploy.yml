@@ -36,7 +36,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages  # The branch to deploy to
-          folder: dist      # The folder where your webpack build output is located
+          folder: build      # The folder where your webpack build output is located
           clean: true       # Remove existing files before deployment
           token: ${{ secrets.TOKEN }}  # GitHub token for authentication
 
