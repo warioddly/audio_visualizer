@@ -35,11 +35,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages  # The branch to deploy to
-          folder: build      # The folder where your webpack build output is located
-          clean: true       # Remove existing files before deployment
-          token: ${{ secrets.TOKEN }}  # GitHub token for authentication
+          github_token: ${{ env.GITHUB_TOKEN }}
+          publish_dir: ./build
+          force_orphan: true
+          user_name: 'github-ci[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Publish to gh-pages'
 
