@@ -27,19 +27,8 @@ jobs:
       - name: Show files in the current directory
         run: ls
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Show files in the current directory
-        run: ls
-
-      - name: Show files in the current directory
-        run: ls ./src
 
       - name: Deploy to Github Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -50,4 +39,6 @@ jobs:
           user_name: 'github-ci[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Publish to gh-pages'
+
+
 
