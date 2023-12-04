@@ -39,7 +39,7 @@ jobs:
         run: ls
 
       - name: Show files in the current directory
-        run: ls ./build
+        run: ls ./src
 
       - name: Deploy to Github Pages
         uses: peaceiris/actions-gh-pages@v3
