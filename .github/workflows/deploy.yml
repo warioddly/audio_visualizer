@@ -35,6 +35,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Show files in the current directory
+        run: ls
+
+      - name: Show files in the current directory
+        run: ls ./build
+
       - name: Deploy to Github Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
