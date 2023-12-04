@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -22,16 +22,12 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          # Build project
+          npm run build
 
-      - name: Show files in the current directory
-        run: ls
-
-      - name: Show files in the current directory
-        run: ls build
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
+          # Show files in the current directory
+          ls build
 
       - name: Deploy to Github Pages
         uses: peaceiris/actions-gh-pages@v3
