@@ -27,6 +27,9 @@ jobs:
       - name: Show files in the current directory
         run: ls
 
+      - name: Show files in the current directory
+        run: ls build
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -34,7 +37,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.TOKEN }}
-          publish_dir: build
+          publish_dir: ./build
           force_orphan: true
           user_name: 'github-ci[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
