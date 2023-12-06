@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { AudioController } from './audio';
 // @ts-ignore
-import waves from './audio/waves.mp3';
 import { Sphere } from './sphere';
 
 
@@ -15,9 +14,8 @@ class Engine {
     private readonly _camera: THREE.PerspectiveCamera;
     private readonly _orbitControls: OrbitControls;
     private readonly _renderer: THREE.WebGLRenderer;
-    private readonly _light: THREE.DirectionalLight;
     private _audioController: AudioController;
-    private readonly sphere: Sphere;
+    private readonly sphere: Sphere = new Sphere();
 
     private readonly initialized: boolean = false;
 
@@ -30,13 +28,11 @@ class Engine {
         this._camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.01, 100 );
         this._camera.position.z = 15;
 
-
         this._renderer = new THREE.WebGLRenderer( { antialias: true } );
         this._renderer.setAnimationLoop( this._animation.bind(this) );
         this._renderer.setPixelRatio( window.devicePixelRatio );
         this._renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( this._renderer.domElement );
-
 
         this._orbitControls = new OrbitControls( this._camera, this._renderer.domElement );
         this._orbitControls.enableDamping = true;
@@ -45,15 +41,7 @@ class Engine {
         this._orbitControls.maxDistance = 18;
         this._orbitControls.minDistance = 7;
 
-
-        this._light = new THREE.DirectionalLight( 0xffffff, 0.5 );
-        this._light.position.set( 0, 0, 1 );
-        this._scene.add( this._light );
-
-        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
-        this._scene.add(ambientLight);
-
-        this.sphere = new Sphere();
+        this._scene.add(new THREE.AmbientLight(0xaaaaaa));
         this._scene.add(this.sphere.mesh);
 
         this._audioUploadListener();
@@ -99,7 +87,7 @@ class Engine {
 
     private _animation( time: any ) {
 
-        if (this._audioController && this._audioController.initialized) {
+       if (this._audioController && this._audioController.initialized) {
             this.sphere.animate(
                 new Uint8Array(this._audioController.analyser.getFrequencyData()),
                 time

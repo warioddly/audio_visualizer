@@ -1,6 +1,4 @@
 
-
-
 export default class Noise3D {
 
 

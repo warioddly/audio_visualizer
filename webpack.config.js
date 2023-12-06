@@ -28,8 +28,6 @@ const config = {
 
         new MiniCssExtractPlugin(),
 
-        // Add your plugins here
-        // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
     module: {
         rules: [
@@ -47,14 +45,6 @@ const config = {
                 use: [stylesHandler, 'css-loader', 'sass-loader'],
             },
             {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                type: 'asset',
-            },
-            {
-                test: /\.(png|svg|jpg|jpeg|gif|ogg|mp3|wav)$/i,
-                type: 'asset',
-            },
-            {
                 test: /\.(png|jpg|gif|mp3)$/,
                 include: path.resolve(__dirname, 'src/assets/audio'),
                 loader: 'file-loader',
@@ -63,8 +53,6 @@ const config = {
                     outputPath: 'assets/audio/',
                 },
             },
-
-
         ],
     },
     resolve: {

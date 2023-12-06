@@ -45,11 +45,10 @@ export class Sphere {
     public animate (dataArray: Uint8Array, time?: number ) {
 
         
-        const lowerHalfArray = dataArray.slice(0, (dataArray.length/2) - 1);
-        const upperHalfArray = dataArray.slice((dataArray.length / 2 ) - 1, dataArray.length - 1);
-    
-        var lowerMaxFr = this._utils.max(lowerHalfArray) / lowerHalfArray.length;
-        var upperAvgFr = this._utils.avg(upperHalfArray) / upperHalfArray.length;
+        const lowerHalfArray = dataArray.slice(0, (dataArray.length/2) - 1),
+            upperHalfArray = dataArray.slice((dataArray.length / 2 ) - 1, dataArray.length - 1),
+            lowerMaxFr = this._utils.max(lowerHalfArray) / lowerHalfArray.length,
+            upperAvgFr = this._utils.avg(upperHalfArray) / upperHalfArray.length;
     
 
         this._transform(
