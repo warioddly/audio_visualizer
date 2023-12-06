@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as THREE from 'three';
 
-export class AudioController {
+export class Audio {
 
     public sound: THREE.Audio;
     public listener: THREE.AudioListener;

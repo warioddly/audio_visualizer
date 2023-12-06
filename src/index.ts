@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 // @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { AudioController } from './audio';
+import { Audio } from './audio';
 // @ts-ignore
 import { Sphere } from './sphere';
 
@@ -14,7 +14,7 @@ class Engine {
     private readonly _camera: THREE.PerspectiveCamera;
     private readonly _orbitControls: OrbitControls;
     private readonly _renderer: THREE.WebGLRenderer;
-    private _audioController: AudioController;
+    private _audioController: Audio;
     private readonly sphere: Sphere = new Sphere();
 
     private readonly initialized: boolean = false;
@@ -71,7 +71,7 @@ class Engine {
                     this._audioController.dispose();
                 }
 
-                this._audioController = new AudioController({
+                this._audioController = new Audio({
                     audio: reader.result,
                     loop: true,
                     autoplay: true,
