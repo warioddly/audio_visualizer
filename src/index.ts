@@ -14,7 +14,7 @@ class Engine {
     private readonly _camera: THREE.PerspectiveCamera;
     private readonly _orbitControls: OrbitControls;
     private readonly _renderer: THREE.WebGLRenderer;
-    private _audioController: Audio;
+    private _audio: Audio;
     private readonly sphere: Sphere = new Sphere();
 
     private readonly initialized: boolean = false;
@@ -67,11 +67,11 @@ class Engine {
 
                 if (!this.initialized) return;
 
-                if (this._audioController && this._audioController.initialized) {
-                    this._audioController.dispose();
+                if (this._audio && this._audio.initialized) {
+                    this._audio.dispose();
                 }
 
-                this._audioController = new Audio({
+                this._audio = new Audio({
                     audio: reader.result,
                     loop: true,
                     autoplay: true,
@@ -87,9 +87,9 @@ class Engine {
 
     private _animation( time: any ) {
 
-       if (this._audioController && this._audioController.initialized) {
+       if (this._audio && this._audio.initialized) {
             this.sphere.animate(
-                new Uint8Array(this._audioController.analyser.getFrequencyData()),
+                new Uint8Array(this._audio.analyser.getFrequencyData()),
                 time
             );
         }
