@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><title>Audio Visualizer | WARIODDLY | IØ</title><meta name="author" content="WARIODDLY"><meta name="description" content="Web audio visualizer based on the Three.js library. And the source code is written in TypeScript"><meta name="keywords" content="WebGL, Three.js, TypeScript, Audio Visualizer, Web Audio API"><meta name="viewport" content="width=device-width,initial-scale=1"><style>* {
+                margin: 0;
+                padding: 0;
+            }
+
+            #audio-uploader::-webkit-file-upload-button {
+                visibility: hidden;
+            }
+
+            #audio-uploader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-color: aliceblue;
+                color: black;
+            }
+
+            #info-card, .author-info {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 300px;
+                z-index: 100;
+                color: white;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            #info-card h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            #info-card p {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .key {
+                background-color: aliceblue;
+                padding: 2px 5px;
+                border-radius: 5px;
+                color: #000;
+            }
+
+            .control-info {
+                margin-top: 20px;
+            }
+
+            .author-info {
+                top: auto;
+                bottom: 10px;
+                left: 10px;
+                height: auto;
+            }
+
+            .author-info p {
+                font-size: 12px;
+            }
+
+            .author-info a {
+                color: white;
+            }
+
+            .author-info a:hover {
+                color: aliceblue;
+            }</style><script defer="defer" src="bundle.js"></script></head><body><div id="info-card"><h1>Audio Visualizer</h1><p>Web audio visualizer based on the Three.js library. And the source code is written in TypeScript</p><p>WebGL, Three.js, TypeScript, Audio Visualizer, Web Audio API</p><br/><p>Select an audio file to play</p><input type="file" id="audio-uploader" accept="audio/*"/><div class="control-info"><p>Press <span class="key">Space</span> To play/pause</p><p>Press <span class="key">Arrow right</span> To fast-forward</p><p>Press <span class="key">Arrow right</span> To rewind</p><p>Press <span class="key">Arrow up</span> To increase volume</p><p>Press <span class="key">Arrow down</span> To decrease volume</p></div></div><div class="author-info"><p>Author: <a href="https://github.com/warioddly" target="_blank">WARIODDLY</a></p><p>Source code: <a href="https://github.com/warioddly/audio_visualizer" target="_blank">GitHub</a></p></div></body></html>
